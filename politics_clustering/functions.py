@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
+from mpl_toolkits.mplot3d import Axes3D
 
 
 def handle_measures_and_questions(full_xml_str):
@@ -235,7 +236,45 @@ def plot_cartography(plot, votes, legend=False, legend_size=10):
                                       markersize=10, label='cluster 1')
 
         plot.legend(handles=[republican_legend, democrat_legend, clust0_legend, clust1_legend],
-                   prop={'size': legend_size}, loc=3)
+                   prop={'size': legend_size}, loc=3)     
+
+
+def plot_pca(plot, votes):
+
+    # Get Data
+    democrat_dim1 = votes[votes["party"] == "D"]["dim_1"]
+    democrat_dim2 = votes[votes["party"] == "D"]["dim_2"]
+    republican_dim1 = votes[votes["party"] == "R"]["dim_1"]
+    republican_dim2 = votes[votes["party"] == "R"]["dim_2"]
+    independant_dim1 = votes[votes["party"] == "I"]["dim_1"]
+    independant_dim2 = votes[votes["party"] == "I"]["dim_2"]
+
+    # Plotting :
+    plot.scatter(democrat_dim1, democrat_dim2, color="b")
+    plot.scatter(republican_dim1, republican_dim2, color="r")
+    plot.scatter(independant_dim1, independant_dim2, color="g")
+
+    plot.set_xlabel("PCA dimension 1")
+    plot.set_ylabel("PCA dimension 2")
+
+
+def plot_pca_3d(ax, pca_df):
+
+    # Get Data
+    democrat_dim1 = pca_df[pca_df["party"] == "D"]["dim_1"]
+    democrat_dim2 = pca_df[pca_df["party"] == "D"]["dim_2"]
+    democrat_dim3 = pca_df[pca_df["party"] == "D"]["dim_3"]
+    republican_dim1 = pca_df[pca_df["party"] == "R"]["dim_1"]
+    republican_dim2 = pca_df[pca_df["party"] == "R"]["dim_2"]
+    republican_dim3 = pca_df[pca_df["party"] == "R"]["dim_3"]
+    independant_dim1 = pca_df[pca_df["party"] == "I"]["dim_1"]
+    independant_dim2 = pca_df[pca_df["party"] == "I"]["dim_2"]
+    independant_dim3 = pca_df[pca_df["party"] == "I"]["dim_3"]
+
+    # Plotting
+    ax.scatter(democrat_dim1, democrat_dim2, democrat_dim3, c="b", s=30)
+    ax.scatter(republican_dim1, republican_dim2, republican_dim3, c="r", s=30)
+    ax.scatter(independant_dim1, independant_dim2, independant_dim3, c="g", s=30)
 
 
 def plot_senator(ax, votes, senator_name, senator_title, legend=False, legend_size=5):
